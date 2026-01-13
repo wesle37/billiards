@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/wesle/projects/billiards/build",
+  "command": "/usr/bin/clang -g -o CMakeFiles/main.dir/main.c.o -c /home/wesle/projects/billiards/src/main.c",
+  "file": "/home/wesle/projects/billiards/src/main.c",
+  "output": "CMakeFiles/main.dir/main.c.o"
+}
+]
