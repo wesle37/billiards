@@ -7,7 +7,8 @@ static double TABLE_FRICTION_K = 0.1;
 static enum states {SHOOTING};
 
 double ball_velo_x(double time, double vi){
-    double res = vi - time*(TABLE_FRICTION_K*GRAVITY);
+    double res = vi - (TABLE_FRICTION_K * GRAVITY * time);
+    res = res > 0.0 ? res : 0.0;
     return res;
 }
 
