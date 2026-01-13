@@ -6,10 +6,21 @@ static double GRAVITY = 9.8;
 static double TABLE_FRICTION_K = 0.1;
 static enum states {SHOOTING};
 
+int sgn(double val) {
+    if(val == 0){
+        return 0;
+    }
+    return val > 0 ? 1 : -1;
+}
+
 double ball_velo_x(double time, double vi){
-    double res = vi - (TABLE_FRICTION_K * GRAVITY * time);
-    res = res > 0.0 ? res : 0.0;
-    return res;
+    double friction = (TABLE_FRICTION_K * BALL_MASS * GRAVITY * -sgn(vi));
+    if(vi - ((friction / BALL_MASS) * time) <= 0){
+        friction = 0.0;
+    }
+    double a = (friction)/BALL_MASS;
+    double v = vi + a*time;
+    return v;
 }
 
 double integrate_simpson(double (*f)(double, double), double vi, double a, double b, int n) {
@@ -33,8 +44,8 @@ int main(){
     double x = integrate_simpson(ball_velo_x, vi_x, 0, 1, 1000);
     printf("X position after 1 second: %f\n", x);
 
-    for(int i=0; i<100; i++){
-        printf("X: %f\n", integrate_simpson(ball_velo_x, vi_x, 0, (double)i/100, 1000));
+    for(int i=0; i<1000; i++){
+        printf("t: %f X: %f\n", (double)i/100, integrate_simpson(ball_velo_x, vi_x, 0, (double)i/100, 1000));
     }
     return 0;
 }
