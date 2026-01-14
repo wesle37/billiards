@@ -1,21 +1,40 @@
 #include <stdio.h>
 #include <math.h>
+#include <float.h>
 
 static double BALL_MASS = 1;
 static double GRAVITY = 9.8;
 static double TABLE_FRICTION_K = 0.1;
+static const double EPS = 1e-12;
+
 static enum states {SHOOTING};
 
-int sgn(double val) {
-    if(val == 0){
-        return 0;
-    }
-    return val > 0 ? 1 : -1;
+/* clamp small values to zero */
+static double near_zero(double v) {
+    return fabs(v) < 1e-12 ? 0.0 : v;
+}
+
+double sgn(double val) {
+    return (0.0 < val) - (val < 0.0);
+}
+
+/* returns velocity at time 't' for a single segment with initial velocity vi */
+double velo_segment(double t, double vi) {
+    vi = near_zero(vi);
+    if (vi == 0.0) return 0.0;
+
+    double friction_force = TABLE_FRICTION_K * BALL_MASS * GRAVITY;
+    double a = -sgn(vi) * (friction_force / BALL_MASS); // always opposes motion
+    if (a == 0.0) return vi;
+
+    double t_stop = -vi / a; // positive if a opposes vi
+    if (t >= t_stop) return 0.0;
+    return vi + a * t;
 }
 
 double ball_velo_x(double time, double vi){
-    double friction = (TABLE_FRICTION_K * BALL_MASS * GRAVITY * -sgn(vi));
-    if(vi - ((friction / BALL_MASS) * time) <= 0){
+    double friction = (TABLE_FRICTION_K * BALL_MASS * GRAVITY * -1.0 * sgn(vi));
+    if(vi + ((friction / BALL_MASS) * time) <= 0){
         friction = 0.0;
     }
     double a = (friction)/BALL_MASS;
