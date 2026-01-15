@@ -1,3 +1,8 @@
 /home/wesle/projects/billiards/build/CMakeFiles/main.dir
 /home/wesle/projects/billiards/build/CMakeFiles/edit_cache.dir
 /home/wesle/projects/billiards/build/CMakeFiles/rebuild_cache.dir
+/home/wesle/projects/billiards/build/vendored/SDL/CMakeFiles/SDL3-shared.dir
+/home/wesle/projects/billiards/build/vendored/SDL/CMakeFiles/SDL3_test.dir
+/home/wesle/projects/billiards/build/vendored/SDL/CMakeFiles/SDL_uclibc.dir
+/home/wesle/projects/billiards/build/vendored/SDL/CMakeFiles/edit_cache.dir
+/home/wesle/projects/billiards/build/vendored/SDL/CMakeFiles/rebuild_cache.dir

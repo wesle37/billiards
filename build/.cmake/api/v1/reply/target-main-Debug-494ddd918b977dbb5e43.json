@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "main"
+			"path" : "Debug/main"
 		}
 	],
 	"backtrace" : 1,
@@ -10,7 +10,8 @@
 	{
 		"commands" : 
 		[
-			"add_executable"
+			"add_executable",
+			"target_link_libraries"
 		],
 		"files" : 
 		[
@@ -24,7 +25,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 4,
+				"line" : 12,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 13,
 				"parent" : 0
 			}
 		]
@@ -38,11 +45,29 @@
 					"fragment" : "-g"
 				}
 			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 2,
+					"path" : "/home/wesle/projects/billiards/build/vendored/SDL/include-revision"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "/home/wesle/projects/billiards/src/vendored/SDL/include"
+				}
+			],
 			"language" : "C",
 			"sourceIndexes" : 
 			[
 				0
 			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "SDL3-shared::@8fb704815aaca498baa2"
 		}
 	],
 	"id" : "main::@6890427a1f51a3e7e1df",
@@ -57,6 +82,15 @@
 			{
 				"fragment" : "",
 				"role" : "flags"
+			},
+			{
+				"fragment" : "-Wl,-rpath,/home/wesle/projects/billiards/build/Debug",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "Debug/libSDL3.so.0.5.0",
+				"role" : "libraries"
 			}
 		],
 		"language" : "C"
