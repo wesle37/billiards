@@ -13,6 +13,13 @@ static const double EPS = 1e-12;
 
 enum states {SHOOTING, MOVING};
 
+struct motion_segment {
+    double pix;
+    double piy;
+    double vix;
+    double viy;
+};
+
 /* clamp small values to zero */
 static double near_zero(double v) {
     return fabs(v) < 1e-12 ? 0.0 : v;
@@ -22,8 +29,8 @@ double sgn(double val) {
     return (0.0 < val) - (val < 0.0);
 }
 
-/* returns velocity at time 't' for a single segment with initial velocity vi */
-double pt_segment(double t, double vi) {
+//returns position givern t = time, vi = initial velocity, pi = initial position.
+double position_result(double t, double vi, double pi) {
     vi = near_zero(vi);
 
     double friction_force = TABLE_FRICTION_K * BALL_MASS * GRAVITY;
@@ -31,10 +38,10 @@ double pt_segment(double t, double vi) {
 
     double t_stop = -vi / a; // positive if a opposes vi
     if(t < t_stop){
-        return (vi * t) + ((a * (t*t))/2);
+        return pi + (vi * t) + ((a * (t*t))/2);
     }
-    return 0.0;
 }
+
 bool update(){
     SDL_Event e;
     if(SDL_PollEvent(&e)){
@@ -57,8 +64,21 @@ bool update(){
 
     SDL_RenderPresent(ren);
 
-    SDL_Delay(1);
-    
+    SDL_Delay(10);
+}
+bool draw_ball(double x, double y){
+    SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(ren);
+
+    SDL_FRect rect;
+    rect.x = x*20;
+    rect.y = y;
+    rect.w = rect.h = 20;
+    SDL_SetRenderDrawColor(ren, 0, 156, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderFillRect(ren, &rect);
+
+    SDL_RenderPresent(ren);
+    return true;
 }
 int main(){
     SDL_Init(SDL_INIT_VIDEO);
@@ -67,28 +87,18 @@ int main(){
     ren = SDL_CreateRenderer(win, NULL);
 
     enum states current_state = SHOOTING;
-    double vi_x = 5;
+    double vix = 5;
     double last = 0;
 
     SDL_Delay(3000);
     
-    for(int i=0; i<500; i++){
+    for(int i=0; i<1000; i++){
         double t = (double)i/100;
-        double x = pt_segment(t, vi_x);
+        double x = position_result(t, vix, 0);
         printf("t: %f X: %f dx: %f\n", t, x, x - last);
         last = x;
 
-        SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderClear(ren);
-
-        SDL_FRect rect;
-        rect.x = x*20;
-        rect.y = 0;
-        rect.w = rect.h = 20;
-        SDL_SetRenderDrawColor(ren, 0, 156, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderFillRect(ren, &rect);
-
-        SDL_RenderPresent(ren);
+        draw_ball(x,0);
 
         SDL_Delay(10);
     }
