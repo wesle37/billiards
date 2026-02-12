@@ -11,4 +11,5 @@ add_subdirectory(/home/wesle/projects/billiards/src/vendored/SDL EXCLUDE_FROM_AL
 
 add_executable(main main.c)
 target_link_libraries(main 
-PRIVATE SDL3::SDL3)
+PRIVATE SDL3::SDL3
+PUBLIC m)

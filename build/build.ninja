@@ -68,7 +68,7 @@ build Debug/main: C_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/main.c.o |
   DEP_FILE = CMakeFiles/main.dir/link.d
   FLAGS = -g
   LINK_FLAGS = -Xlinker --dependency-file=CMakeFiles/main.dir/link.d
-  LINK_LIBRARIES = -Wl,-rpath,/home/wesle/projects/billiards/build/Debug  Debug/libSDL3.so.0.5.0
+  LINK_LIBRARIES = -Wl,-rpath,/home/wesle/projects/billiards/build/Debug  Debug/libSDL3.so.0.5.0  -lm
   OBJECT_DIR = CMakeFiles/main.dir
   POST_BUILD = :
   PRE_LINK = :

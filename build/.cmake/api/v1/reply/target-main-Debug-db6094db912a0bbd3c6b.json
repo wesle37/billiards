@@ -91,6 +91,11 @@
 				"backtrace" : 2,
 				"fragment" : "Debug/libSDL3.so.0.5.0",
 				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lm",
+				"role" : "libraries"
 			}
 		],
 		"language" : "C"
