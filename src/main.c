@@ -10,6 +10,8 @@ SDL_Renderer* ren;
 static double BALL_MASS = 0.160;
 static double GRAVITY = 9.8;
 static double TABLE_FRICTION_K = 0.015;
+static double TABLE_LENGTH = 2.54;
+static double TABLE_WIDTH = 1.27;
 static const double EPS = 1e-12;
 
 enum states {SHOOTING, MOVING};
@@ -53,25 +55,29 @@ static double near_zero(double v) {
     return fabs(v) < 1e-12 ? 0.0 : v;
 }
 
+double acceleration(double friction_force, double vi){
+    return (-sgn(vi) * friction_force) / BALL_MASS;
+}
+
 double sgn(double val) {
     return (0.0 < val) - (val < 0.0);
 }
 
+double t_stop(double vi, double a){
+    return -vi / a;
+}
+
 //returns position given t = time, vi = initial velocity, pi = initial position.
-double p_of_t(double t, double vi, double pi, double friction_force) {
+double p_of_t(double a, double vi, double pi, double t) {
     vi = near_zero(vi);
 
-    double a = (-sgn(vi) * friction_force) / BALL_MASS; // always opposes motion
-
-    double t_stop = -vi / a; // positive if a opposes vi
-    if(t < t_stop){
+    if(t < t_stop(vi, a)){
         return pi + (vi * t) + ((a * (t*t))/2);
     }
 }
 
 //returns time given at a target position (or 0 if not found) given friction_force, v = velocity, pi = initial position, p = target position
-double t_of_x(double friction_force, double v, double pi, double p){
-    double a = (-sgn(v) * friction_force) / BALL_MASS;
+double t_of_p(double a, double v, double pi, double p){
     double plus = (-v + sqrtf(pow(v, 2) - 2*(a)*(pi-p)))/a;
     double minus = (-v - sqrtf(pow(v, 2) - 2*(a)*(pi-p)))/a;
     if(plus >= 0) return plus;
@@ -127,26 +133,38 @@ int main(){
     double friction_force = TABLE_FRICTION_K * BALL_MASS * GRAVITY;
 
     enum states current_state = SHOOTING;
+    double pix = 0;
+    double piy = 0;
     double vix = 5;
+    double viy = 0;
     double last = 0;
     
 
     SDL_Delay(3000);
 
     SegmentList * seglist = init_segment_list();
-    MotionSegment initial_segment = {.pix = 0, .piy = 0, .vix = vix, .viy = 0, .start_time = 0};
+    MotionSegment segment = {.pix = 0, .piy = 0, .vix = vix, .viy = 0, .start_time = 0};
     int step = 0;
-    add_segment(seglist, initial_segment);
+    add_segment(seglist, segment);
 
+    //read out vix in the motionsegment
     for(int i = 0; i<seglist->count; i++){
-        printf("%f\n", seglist->data[i].vix);
+        printf("vix: %f\n", seglist->data[i].vix);
     }
-    /*
+    
     int run = 1;
     while(run){
-        
+        printf("%f\n", seglist->data[seglist->count]);
+        //check 
+        double ax = acceleration(friction_force, segment.vix);
+        double t_cushion = t_of_p(ax, segment.vix, segment.pix, TABLE_WIDTH/2);
+        if(t_cushion){
+            MotionSegment new_seg = {.pix = TABLE_WIDTH/2, .piy = 0, .vix = segment.vix + (ax*t_cushion), .viy = 0, .start_time = t_cushion};
+            add_segment(seglist, new_seg);
+            segment = new_seg;
+        }
     }
-    */
+    
     
     /*
     for(int i=0; i<1000; i++){
